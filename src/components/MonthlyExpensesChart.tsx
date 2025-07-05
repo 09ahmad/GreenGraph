@@ -4,8 +4,20 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
-export function MonthlyExpensesChart({ transactions }: any) {
-  const [chartData, setChartData] = useState<any[]>([]);
+interface Transaction {
+  _id: string;
+  amount: number;
+  description?: string;
+  date: string;
+}
+
+interface ChartData {
+  month: string;
+  total: number;
+}
+
+export function MonthlyExpensesChart({ transactions }: { transactions: Transaction[] }) {
+  const [chartData, setChartData] = useState<ChartData[]>([]);
 
   useEffect(() => {
     if (transactions && transactions.length > 0) {
@@ -16,10 +28,10 @@ export function MonthlyExpensesChart({ transactions }: any) {
     }
   }, [transactions]);
 
-  const processTransactions = (transactions: any[]) => {
-    const monthlyTotals: any = {};
+  const processTransactions = (transactions: Transaction[]): ChartData[] => {
+    const monthlyTotals: Record<string, number> = {};
     
-    transactions.forEach((transaction: any) => {
+    transactions.forEach((transaction: Transaction) => {
       const date = new Date(transaction.date);
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       

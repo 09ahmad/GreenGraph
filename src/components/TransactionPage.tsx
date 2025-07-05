@@ -2,16 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Toaster } from "@/components/ui/toaster";
 import { TransactionForm } from "./TransactionForm";
 import { TransactionList } from "./TransactionList";
 import { MonthlyExpensesChart } from "./MonthlyExpensesChart";
 
+interface Transaction {
+  _id: string;
+  amount: number;
+  description?: string;
+  date: string;
+}
+
 export function TransactionPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTransaction, setEditingTransaction] = useState(null);
-  const [transactions, setTransactions] = useState([]);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
 
   // Fetch transactions on component mount
@@ -39,7 +46,7 @@ export function TransactionPage() {
     setRefreshKey(prev => prev + 1);
   };
 
-  const handleEditClick = (transaction) => {
+  const handleEditClick = (transaction: Transaction) => {
     setEditingTransaction(transaction);
     setIsModalOpen(true);
   };
@@ -86,7 +93,6 @@ export function TransactionPage() {
           onEdit={handleEditClick} 
           transactions={transactions}
           onRefresh={fetchTransactions}
-          refreshKey={refreshKey}
         />
       </div>
 

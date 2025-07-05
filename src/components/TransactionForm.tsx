@@ -4,7 +4,13 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Transaction } from "./TransactionList";
+
+interface Transaction {
+  _id: string;
+  amount: number;
+  description?: string;
+  date: string;
+}
 
 export function TransactionForm({ onSuccess, transaction }: { onSuccess: () => void; transaction?: Transaction | null }) {
   const [amount, setAmount] = useState("");
@@ -27,7 +33,7 @@ export function TransactionForm({ onSuccess, transaction }: { onSuccess: () => v
     }
   }, [transaction]);
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Basic validation
@@ -74,7 +80,7 @@ export function TransactionForm({ onSuccess, transaction }: { onSuccess: () => v
       } else {
         throw new Error("Failed to save transaction");
       }
-    } catch (error) {
+    } catch {
       toast({ title: "Error saving transaction", variant: "destructive" });
     } finally {
       setIsLoading(false);

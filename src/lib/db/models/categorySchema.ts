@@ -1,4 +1,4 @@
-import { Schema, model, Document, models } from "mongoose";
+import { Schema, model, models } from "mongoose";
 import { ICategory } from "../utils/validations";
 
 const categorySchema = new Schema<ICategory>(

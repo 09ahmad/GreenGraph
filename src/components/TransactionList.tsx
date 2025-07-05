@@ -1,22 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-export interface Transaction {
+interface Transaction {
   _id: string;
   amount: number;
   description?: string;
   date: string;
 }
 
-export function TransactionList({ onEdit, transactions, onRefresh, refreshKey }: any) {
+interface TransactionListProps {
+  onEdit: (transaction: Transaction) => void;
+  transactions: Transaction[];
+  onRefresh: () => void;
+}
+
+export function TransactionList({ onEdit, transactions, onRefresh }: TransactionListProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleDelete = async (id:any) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this transaction?")) {
       return;
     }
@@ -30,13 +36,11 @@ export function TransactionList({ onEdit, transactions, onRefresh, refreshKey }:
       if (response.ok) {
         toast({ title: "Transaction deleted successfully" });
         // Refresh the parent component's data
-        if (onRefresh) {
-          onRefresh();
-        }
+        onRefresh();
       } else {
         toast({ title: "Failed to delete transaction", variant: "destructive" });
       }
-    } catch (err) {
+    } catch {
       toast({ title: "Error deleting transaction", variant: "destructive" });
     } finally {
       setLoading(false);
@@ -61,7 +65,7 @@ export function TransactionList({ onEdit, transactions, onRefresh, refreshKey }:
 
   return (
     <div className="space-y-4">
-      {transactions.map((transaction) => (
+      {transactions.map((transaction: Transaction) => (
         <Card key={transaction._id} className="p-4">
           <div className="flex justify-between items-center">
             <div>

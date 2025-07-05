@@ -9,13 +9,13 @@ export async function POST(req: Request) {
     const body = await req.json();
     const validateInput = validTransaction.safeParse(body);
     if(!validateInput.success){
-      NextResponse.json({
+      return NextResponse.json({
         message:"Invalid Input"
       },{status:401})
     }
-    const newTransaction = TransactionModel.create(body);
+    const newTransaction = await TransactionModel.create(body);
     return NextResponse.json(newTransaction, { status: 201 });
-  } catch (error) {
-    throw new Error("Something went wrong");
+  } catch {
+    return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
   }
 }
