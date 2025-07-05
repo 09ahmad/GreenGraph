@@ -14,8 +14,7 @@ export async function GET() {
       message: "Transactions fetched successfully"
     }, { status: 200 });
     
-  } catch (error) {
-    console.error("Error fetching transactions:", error);
+  } catch {
     return NextResponse.json({
       success: false,
       message: "Error fetching transactions"

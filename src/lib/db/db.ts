@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 let isConnected = false; 
@@ -22,8 +21,8 @@ export const runDB = async () => {
     });
     isConnected = true;
     console.log(" Successfully connected to MongoDB.");
-  } catch (error) {
-    console.error("MongoDB connection failed:", error);
+  } catch {
+    console.error("MongoDB connection failed");
     process.exit(1);
   }
 };

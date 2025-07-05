@@ -19,7 +19,6 @@ export function TransactionPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [refreshKey, setRefreshKey] = useState(0);
 
   // Fetch transactions on component mount
   useEffect(() => {
@@ -43,7 +42,6 @@ export function TransactionPage() {
     setEditingTransaction(null);
     // Refresh data without page reload
     fetchTransactions();
-    setRefreshKey(prev => prev + 1);
   };
 
   const handleEditClick = (transaction: Transaction) => {
