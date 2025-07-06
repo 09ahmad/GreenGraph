@@ -1,8 +1,18 @@
 import { Transaction, Category } from "@/types";
 
+const baseUrl =
+  typeof window === "undefined"
+    ? process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000"
+    : "";
+
 export async function getTransactions(): Promise<Transaction[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/transactions/getDetails`, {
+    const url = typeof window === "undefined"
+      ? `${baseUrl}/api/transactions/getDetails`
+      : "/api/transactions/getDetails";
+    const response = await fetch(url, {
       cache: 'no-store'
     });
     const data = await response.json();
@@ -15,7 +25,10 @@ export async function getTransactions(): Promise<Transaction[]> {
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/category/getAll`, {
+    const url = typeof window === "undefined"
+      ? `${baseUrl}/api/category/getAll`
+      : "/api/category/getAll";
+    const response = await fetch(url, {
       cache: 'no-store' 
     });
     const data = await response.json();
