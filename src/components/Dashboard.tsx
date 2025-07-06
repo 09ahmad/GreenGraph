@@ -31,7 +31,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
   }).length;
 
   return (
-    <div className="w-full min-h-screen bg-background text-white font-mono">
+    <div className="w-full min-h-screen bg-background text-white font-mono pt-12">
       <div className="w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <Card className="bg-[#181818] border border-[#333] p-8 flex flex-col gap-2">
           <div className="flex items-center gap-2">

@@ -12,19 +12,20 @@ const navItems = [
 export function NavigationBar() {
   const pathname = usePathname();
   return (
-    <nav className="w-full flex items-center justify-between px-8 py-4 bg-black font-mono">
-      {/* Left: Website Name */}
-      <span className="text-xl font-bold tracking-wide font-mono" style={{ color: '#14532d' }}>GreenGraph</span>
-      {/* Center: Navigation Links */}
+    <nav className="w-full flex items-center justify-between px-8 py-4 font-mono bg-transparent">
+      <span className="text-2xl font-extrabold tracking-wide font-mono bg-gradient-to-r from-green-400 via-green-600 to-emerald-500 bg-clip-text text-transparent flex items-center gap-2">
+        GreenGraph
+      </span>
       <div className="flex-1 flex justify-center">
-        <div className="flex gap-4 font-mono">
+        <div className="flex gap-6 font-mono text-base tracking-normal">
           {navItems.map((item) => {
             const isActive = pathname === item.href || (item.href === "/" && pathname === "/");
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`text-sm px-1 transition-colors duration-150 ${isActive ? "underline underline-offset-8 font-bold text-white" : "opacity-80 hover:opacity-100 text-white"}`}
+                className={`transition-colors duration-200 px-1 ${isActive ? "text-green-300" : "text-white/80 hover:text-green-200"}`}
+                style={{ fontFamily: 'JetBrains Mono, Fira Mono, Menlo, monospace' }}
               >
                 {item.name}
               </Link>
@@ -32,7 +33,6 @@ export function NavigationBar() {
           })}
         </div>
       </div>
-      {/* Right: Empty for now (for future use) */}
       <div style={{ width: "120px" }} />
     </nav>
   );

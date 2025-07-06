@@ -31,9 +31,12 @@ const defaultCategories = [
 export function CategoryManager() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newCategory, setNewCategory] = useState({ name: "", icon: "", color: "#888888", type: "expense" as "expense" | "income" });
+  const [newCategory, setNewCategory] = useState({ name: "", icon: "", color: "#888888", type: "expense" as "expense" | "income", budget: 0 });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [editForm, setEditForm] = useState({ name: "", icon: "", color: "#888888", type: "expense" as "expense" | "income", budget: 0 });
 
   useEffect(() => {
     fetchCategories();
@@ -84,7 +87,7 @@ export function CategoryManager() {
 
       if (response.ok) {
         toast({ title: "Category added successfully!" });
-        setNewCategory({ name: "", icon: "", color: "#888888", type: "expense" });
+        setNewCategory({ name: "", icon: "", color: "#888888", type: "expense", budget: 0 });
         setIsModalOpen(false);
         fetchCategories();
       } else {
@@ -92,6 +95,42 @@ export function CategoryManager() {
       }
     } catch (error) {
       toast({ title: "Error adding category", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditClick = (category: Category) => {
+    setEditingCategory(category);
+    setEditForm({
+      name: category.name,
+      icon: category.icon || "",
+      color: category.color || "#888888",
+      type: category.type,
+      budget: category.budget || 0,
+    });
+    setEditModalOpen(true);
+  };
+
+  const handleEditSave = async () => {
+    if (!editingCategory) return;
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/category/update/${editingCategory._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editForm),
+      });
+      if (response.ok) {
+        toast({ title: "Category updated successfully!" });
+        setEditModalOpen(false);
+        setEditingCategory(null);
+        fetchCategories();
+      } else {
+        throw new Error("Failed to update category");
+      }
+    } catch (error) {
+      toast({ title: "Error updating category", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -108,10 +147,16 @@ export function CategoryManager() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {categories.map((category) => (
-          <Card key={category._id} className="p-6 flex flex-col items-center gap-2 border border-gray-700 rounded-xl bg-[#18181b]">
+          <Card key={category._id} className="p-6 flex flex-col items-center gap-2 border border-gray-700 rounded-xl bg-[#18181b] relative">
+            <span className="absolute top-2 right-2 cursor-pointer" onClick={() => handleEditClick(category)} aria-label="Edit category">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-400 hover:text-primary transition-colors">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+              </svg>
+            </span>
             <div className="text-3xl mb-2">{category.icon || "📁"}</div>
             <div className="font-semibold text-base text-white">{category.name}</div>
             <div className={`text-xs px-2 py-1 rounded-full ${category.type === "income" ? "bg-green-900 text-green-300" : "bg-red-900 text-red-300"}`}>{category.type.charAt(0).toUpperCase() + category.type.slice(1)}</div>
+            <div className="text-xs text-gray-400 mt-1">Budget: {category.budget ? `$${category.budget}` : "-"}</div>
           </Card>
         ))}
       </div>
@@ -154,8 +199,79 @@ export function CategoryManager() {
                     <option value="income">Income</option>
                   </select>
                 </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="category-budget">Budget (optional)</Label>
+                  <Input
+                    id="category-budget"
+                    type="number"
+                    min="0"
+                    value={newCategory.budget || ""}
+                    onChange={e => setNewCategory({ ...newCategory, budget: Number(e.target.value) })}
+                    placeholder="Enter monthly budget"
+                    className="border border-gray-700 rounded-lg px-4 py-2 bg-[#18181b] focus:border-gray-500"
+                  />
+                </div>
                 <Button type="submit" disabled={loading} className="w-full mt-2">
                   {loading ? "Adding..." : "Add Category"}
+                </Button>
+              </form>
+            </Card>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+        <DialogContent>
+          <DialogTitle className="sr-only">Edit Category</DialogTitle>
+          <div className="flex justify-center items-center min-h-[60vh]">
+            <Card className="w-full max-w-md border border-gray-700 rounded-xl bg-[#18181b] p-8">
+              <form onSubmit={e => { e.preventDefault(); handleEditSave(); }} className="flex flex-col gap-6">
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-category-name">Name</Label>
+                  <Input
+                    id="edit-category-name"
+                    value={editForm.name}
+                    onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                    placeholder="Category name"
+                    className="border border-gray-700 rounded-lg px-4 py-2 bg-[#18181b] focus:border-gray-500"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-category-icon">Icon (emoji)</Label>
+                  <Input
+                    id="edit-category-icon"
+                    value={editForm.icon}
+                    onChange={e => setEditForm({ ...editForm, icon: e.target.value })}
+                    placeholder="🍽️"
+                    className="border border-gray-700 rounded-lg px-4 py-2 bg-[#18181b] focus:border-gray-500"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-category-type">Type</Label>
+                  <select
+                    id="edit-category-type"
+                    value={editForm.type}
+                    onChange={e => setEditForm({ ...editForm, type: e.target.value as "expense" | "income" })}
+                    className="flex h-10 w-full border border-gray-700 rounded-lg px-4 py-2 bg-[#18181b] text-card-foreground font-mono shadow-none focus:border-gray-500"
+                  >
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                  </select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-category-budget">Budget (optional)</Label>
+                  <Input
+                    id="edit-category-budget"
+                    type="number"
+                    min="0"
+                    value={editForm.budget}
+                    onChange={e => setEditForm({ ...editForm, budget: Number(e.target.value) })}
+                    placeholder="Enter monthly budget"
+                    className="border border-gray-700 rounded-lg px-4 py-2 bg-[#18181b] focus:border-gray-500"
+                  />
+                </div>
+                <Button type="submit" disabled={loading} className="w-full mt-2">
+                  {loading ? "Saving..." : "Save Changes"}
                 </Button>
               </form>
             </Card>

@@ -17,10 +17,18 @@ export async function getTransactions(): Promise<Transaction[]> {
       .populate("category")
       .sort({ date: -1 })
       .lean();
-    // Map to Transaction type
     return transactions.map((t: any) => {
-      const { __v, ...rest } = t;
-      return rest as Transaction;
+      const { __v, _id, category, ...rest } = t;
+      return {
+        ...rest,
+        _id: _id?.toString(),
+        category: category
+          ? {
+              ...category,
+              _id: category._id?.toString(),
+            }
+          : null,
+      } as Transaction;
     });
   } catch (error) {
     console.error("Error fetching transactions:", error);
@@ -32,10 +40,12 @@ export async function getCategories(): Promise<Category[]> {
   try {
     await runDB();
     const categories = await CategoryModel.find({}).lean();
-    // Map to Category type
     return categories.map((c: any) => {
-      const { __v, ...rest } = c;
-      return rest as Category;
+      const { __v, _id, ...rest } = c;
+      return {
+        ...rest,
+        _id: _id?.toString(),
+      } as Category;
     });
   } catch (error) {
     console.error("Error fetching categories:", error);
