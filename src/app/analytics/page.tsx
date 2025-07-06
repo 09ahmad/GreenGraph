@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { CategoryPieChart } from "@/components/CategoryPieChart";
 import { MonthlyExpensesChart } from "@/components/MonthlyExpensesChart";
 import { getTransactions } from "@/lib/api";
