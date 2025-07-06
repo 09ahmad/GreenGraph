@@ -31,8 +31,8 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
   }).length;
 
   return (
-    <div className="w-full min-h-screen bg-background text-white font-mono pt-12">
-      <div className="w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <div className="w-full min-h-screen bg-background text-white font-mono pt-12 px-2 sm:px-0">
+      <div className="w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
         <Card className="bg-[#181818] border border-[#333] p-8 flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <span className="text-2xl">↗️</span>
@@ -67,13 +67,13 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
         </Card>
       </div>
 
-      <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        <Card className="bg-[#232323] border border-[#333] p-8 flex flex-col items-center justify-center min-h-[320px]">
+      <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-12">
+        <Card className="bg-[#232323] border border-[#333] p-8 flex flex-col items-center justify-center min-h-[320px] w-full overflow-x-auto">
           <div className="w-full">
             <MonthlyExpensesChart transactions={transactions} />
           </div>
         </Card>
-        <Card className="bg-[#232323] border border-[#333] p-8 flex flex-col items-center justify-center min-h-[320px]">
+        <Card className="bg-[#232323] border border-[#333] p-8 flex flex-col items-center justify-center min-h-[320px] w-full overflow-x-auto">
           <div className="w-full">
             <CategoryPieChart transactions={transactions} />
           </div>

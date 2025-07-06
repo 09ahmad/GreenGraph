@@ -12,12 +12,12 @@ const navItems = [
 export function NavigationBar() {
   const pathname = usePathname();
   return (
-    <nav className="w-full flex items-center justify-between px-8 py-4 font-mono bg-transparent">
-      <span className="text-2xl font-extrabold tracking-wide font-mono bg-gradient-to-r from-green-400 via-green-600 to-emerald-500 bg-clip-text text-transparent flex items-center gap-2">
+    <nav className="w-full flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-4 font-mono bg-transparent">
+      <span className="text-xl sm:text-2xl font-extrabold tracking-wide font-mono bg-gradient-to-r from-green-400 via-green-600 to-emerald-500 bg-clip-text text-transparent flex items-center gap-2 mb-2 sm:mb-0">
         GreenGraph
       </span>
-      <div className="flex-1 flex justify-center">
-        <div className="flex gap-6 font-mono text-base tracking-normal">
+      <div className="flex-1 flex justify-center w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 font-mono text-base sm:text-base tracking-normal w-full sm:w-auto items-center">
           {navItems.map((item) => {
             const isActive = pathname === item.href || (item.href === "/" && pathname === "/");
             return (
@@ -33,7 +33,7 @@ export function NavigationBar() {
           })}
         </div>
       </div>
-      <div style={{ width: "120px" }} />
+      <div className="hidden sm:block" style={{ width: "120px" }} />
     </nav>
   );
 } 
