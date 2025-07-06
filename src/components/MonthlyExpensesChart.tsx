@@ -3,13 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-
-interface Transaction {
-  _id: string;
-  amount: number;
-  description?: string;
-  date: string;
-}
+import { Transaction } from "@/types";
 
 interface ChartData {
   month: string;
@@ -42,7 +36,6 @@ export function MonthlyExpensesChart({ transactions }: { transactions: Transacti
       }
     });
 
-    // Convert to array format for chart
     return Object.keys(monthlyTotals).map(month => ({
       month: month,
       total: monthlyTotals[month]

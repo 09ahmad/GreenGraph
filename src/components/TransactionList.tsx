@@ -4,13 +4,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-
-interface Transaction {
-  _id: string;
-  amount: number;
-  description?: string;
-  date: string;
-}
+import { Transaction } from "@/types";
 
 interface TransactionListProps {
   onEdit: (transaction: Transaction) => void;
@@ -35,7 +29,6 @@ export function TransactionList({ onEdit, transactions, onRefresh }: Transaction
 
       if (response.ok) {
         toast({ title: "Transaction deleted successfully" });
-        // Refresh the parent component's data
         onRefresh();
       } else {
         toast({ title: "Failed to delete transaction", variant: "destructive" });
@@ -68,15 +61,28 @@ export function TransactionList({ onEdit, transactions, onRefresh }: Transaction
       {transactions.map((transaction: Transaction) => (
         <Card key={transaction._id} className="p-4">
           <div className="flex justify-between items-center">
-            <div>
-              <div className="text-xl font-bold text-green-600">
-                ${transaction.amount.toFixed(2)}
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">
+                {transaction.category && typeof transaction.category === 'object' 
+                  ? transaction.category.icon || "📁" 
+                  : "📁"}
               </div>
-              <div className="text-gray-600">
-                {transaction.description || "No description"}
-              </div>
-              <div className="text-sm text-gray-400">
-                {new Date(transaction.date).toLocaleDateString()}
+              <div>
+                <div className={`text-xl font-bold ${
+                  transaction.category && typeof transaction.category === 'object' && transaction.category.type === 'income' 
+                    ? 'text-green-600' 
+                    : 'text-red-600'
+                }`}>
+                  ${transaction.amount.toFixed(2)}
+                </div>
+                <div className="text-gray-600 text-sm">
+                  {transaction.description || "No description"}
+                </div>
+                <div className="text-xs text-gray-400">
+                  {transaction.category && typeof transaction.category === 'object' 
+                    ? transaction.category.name 
+                    : "Unknown Category"} • {new Date(transaction.date).toLocaleDateString()}
+                </div>
               </div>
             </div>
             <div className="flex gap-2">

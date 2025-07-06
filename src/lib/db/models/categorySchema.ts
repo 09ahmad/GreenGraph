@@ -1,6 +1,5 @@
 import { Schema, model, models } from "mongoose";
-import { ICategory } from "../utils/validations";
-
+import { ICategory } from "@/lib/utils/validations";
 const categorySchema = new Schema<ICategory>(
   {
     name: {
@@ -35,4 +34,4 @@ const categorySchema = new Schema<ICategory>(
   }
 );
 
-export const CategoryModel = models.Transaction || model<ICategory>("Category", categorySchema);
+export const CategoryModel = models.Category || model<ICategory>("Category", categorySchema);

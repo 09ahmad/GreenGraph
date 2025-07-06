@@ -1,13 +1,12 @@
 import {z} from "zod";
 
-
-
-export interface ITransaction extends Document {
+export interface ITransaction extends Document{
   amount: number;
   description?: string;
   date: Date;
   createdAt: Date;
   updatedAt: Date;
+  category: ICategory | string;
 }
 
 export interface ICategory extends Document {
@@ -19,10 +18,16 @@ export interface ICategory extends Document {
 }
 
 export const validTransaction = z.object({
-  amount:z.number(),
-  description:z.string().max(200,"Maximum 200 character allowed ").optional(),
-  date:z.date().optional()
-})
+  amount: z.number().min(0.01, "Amount must be at least 0.01"),
+  description: z.string().max(200, "Maximum 200 character allowed").optional(),
+  date: z.string().or(z.date()).transform((val) => {
+    if (typeof val === 'string') {
+      return new Date(val);
+    }
+    return val;
+  }),
+  category: z.string().min(1, "Category is required")
+});
 
 export const validCategory = z.object({
   name: z.string()

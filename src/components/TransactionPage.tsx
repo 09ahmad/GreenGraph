@@ -3,24 +3,37 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Toaster } from "@/components/ui/toaster";
 import { TransactionForm } from "./TransactionForm";
-import { TransactionList } from "./TransactionList";
-import { MonthlyExpensesChart } from "./MonthlyExpensesChart";
+import { Card } from "@/components/ui/card";
 
-interface Transaction {
+interface TransactionCard {
   _id: string;
   amount: number;
   description?: string;
   date: string;
+  category: {
+    _id: string;
+    name: string;
+    icon?: string;
+    color?: string;
+    type: "expense" | "income";
+  };
+}
+
+interface TransactionFormType {
+  _id: string;
+  amount: number;
+  description?: string;
+  date: string;
+  category: string;
 }
 
 export function TransactionPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [editingTransaction, setEditingTransaction] = useState<TransactionFormType | null>(null);
+  const [transactions, setTransactions] = useState<TransactionCard[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  // Fetch transactions on component mount
   useEffect(() => {
     fetchTransactions();
   }, []);
@@ -40,12 +53,17 @@ export function TransactionPage() {
   const handleFormSuccess = () => {
     setIsModalOpen(false);
     setEditingTransaction(null);
-    // Refresh data without page reload
     fetchTransactions();
   };
 
-  const handleEditClick = (transaction: Transaction) => {
-    setEditingTransaction(transaction);
+  const handleEditClick = (transaction: TransactionCard) => {
+    setEditingTransaction({
+      _id: transaction._id,
+      amount: transaction.amount,
+      description: transaction.description,
+      date: transaction.date,
+      category: transaction.category._id
+    });
     setIsModalOpen(true);
   };
 
@@ -54,53 +72,85 @@ export function TransactionPage() {
     setIsModalOpen(true);
   };
 
-  return (
-    <div className="w-full max-w-4xl mx-auto p-4">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">Personal Finance Tracker</h1>
-        <p className="text-gray-600">Keep track of your daily expenses</p>
-      </div>
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this transaction?")) return;
+    setDeletingId(id);
+    try {
+      await fetch(`/api/transactions/delete/${id}`, { method: "DELETE" });
+      fetchTransactions();
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
-      {/* Add Transaction Button */}
-      <div className="flex justify-end mb-6">
-        <Button onClick={handleAddClick} className="bg-blue-600 hover:bg-blue-700">
-          + Add Transaction
+  return (
+    <div className="w-full max-w-2xl mx-auto p-4 flex flex-col items-center">
+      {/* Add Transaction Button - top right */}
+      <div className="w-full flex justify-end mt-4 mb-8">
+        <Button
+          onClick={handleAddClick}
+          variant="outline"
+          
+        >
+          Add Transaction
         </Button>
       </div>
 
-      {/* Transaction Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {editingTransaction ? "Edit Transaction" : "Add New Transaction"}
-            </DialogTitle>
-          </DialogHeader>
+          <DialogTitle className="sr-only">{editingTransaction ? "Edit Transaction" : "Add New Transaction"}</DialogTitle>
           <TransactionForm 
             onSuccess={handleFormSuccess} 
-            transaction={editingTransaction} 
+            transaction={editingTransaction}
           />
         </DialogContent>
       </Dialog>
 
-      {/* Transaction List */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
-        <TransactionList 
-          onEdit={handleEditClick} 
-          transactions={transactions}
-          onRefresh={fetchTransactions}
-        />
+      <div className="w-full flex flex-col gap-4 mt-8">
+        {transactions.length === 0 ? (
+          <div className="text-center text-white opacity-60">No transactions found. Add your first transaction!</div>
+        ) : (
+          transactions.map((transaction) => (
+            <Card key={transaction._id} className="bg-[#181818] border border-[#333] p-6 flex flex-col gap-2 rounded-lg">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">{transaction.category?.icon || "📁"}</div>
+                  <div>
+                    <div className="text-xl font-bold text-white">${transaction.amount.toFixed(2)}</div>
+                    <div className="text-white text-sm opacity-80">
+                      {transaction.description || "No description"}
+                    </div>
+                    <div className="text-xs text-white opacity-60">
+                      {transaction.category?.name || "Unknown Category"} • {new Date(transaction.date).toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => handleEditClick(transaction)}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    onClick={() => handleDelete(transaction._id)}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                    disabled={deletingId === transaction._id}
+                  >
+                    {deletingId === transaction._id ? "..." : "Delete"}
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))
+        )}
       </div>
-
-      {/* Chart */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Monthly Overview</h2>
-        <MonthlyExpensesChart transactions={transactions} />
-      </div>
-
-      <Toaster />
     </div>
   );
 } 

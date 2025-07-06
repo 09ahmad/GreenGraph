@@ -22,3 +22,4 @@ export async function DELETE(_: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 }
+

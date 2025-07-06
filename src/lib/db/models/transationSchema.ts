@@ -1,5 +1,5 @@
 import { Schema, model, models } from "mongoose";
-import { ITransaction } from "../utils/validations";
+import { ITransaction } from "@/lib/utils/validations";
 
 
 const transactionSchema = new Schema<ITransaction>(
@@ -20,6 +20,11 @@ const transactionSchema = new Schema<ITransaction>(
       required: true,
       default: Date.now,
     },
+    category:{
+      type:Schema.Types.ObjectId,
+      ref:"Category",
+      required:true
+    }
   },
   {
     timestamps: true, 
