@@ -1,4 +1,7 @@
 import { Transaction, Category } from "@/types";
+import { runDB } from "@/lib/db/db";
+import { TransactionModel } from "@/lib/db/models/transationSchema";
+import { CategoryModel } from "@/lib/db/models/categorySchema";
 
 const baseUrl =
   typeof window === "undefined"
@@ -9,14 +12,16 @@ const baseUrl =
 
 export async function getTransactions(): Promise<Transaction[]> {
   try {
-    const url = typeof window === "undefined"
-      ? `${baseUrl}/api/transactions/getDetails`
-      : "/api/transactions/getDetails";
-    const response = await fetch(url, {
-      cache: 'no-store'
+    await runDB();
+    const transactions = await TransactionModel.find({})
+      .populate("category")
+      .sort({ date: -1 })
+      .lean();
+    // Map to Transaction type
+    return transactions.map((t: any) => {
+      const { __v, ...rest } = t;
+      return rest as Transaction;
     });
-    const data = await response.json();
-    return data.data || [];
   } catch (error) {
     console.error("Error fetching transactions:", error);
     return [];
@@ -25,14 +30,13 @@ export async function getTransactions(): Promise<Transaction[]> {
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const url = typeof window === "undefined"
-      ? `${baseUrl}/api/category/getAll`
-      : "/api/category/getAll";
-    const response = await fetch(url, {
-      cache: 'no-store' 
+    await runDB();
+    const categories = await CategoryModel.find({}).lean();
+    // Map to Category type
+    return categories.map((c: any) => {
+      const { __v, ...rest } = c;
+      return rest as Category;
     });
-    const data = await response.json();
-    return data.data || [];
   } catch (error) {
     console.error("Error fetching categories:", error);
     return [];
