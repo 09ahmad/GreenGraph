@@ -2,111 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap');
+
 @layer base {
   :root {
-    --background: oklch(1.0000 0 0);
-    --foreground: oklch(0.1448 0 0);
-    --card: oklch(1.0000 0 0);
-    --card-foreground: oklch(0.1448 0 0);
-    --popover: oklch(1.0000 0 0);
-    --popover-foreground: oklch(0.1448 0 0);
-    --primary: oklch(0.5555 0 0);
-    --primary-foreground: oklch(0.9851 0 0);
-    --secondary: oklch(0.9702 0 0);
-    --secondary-foreground: oklch(0.2046 0 0);
-    --muted: oklch(0.9702 0 0);
-    --muted-foreground: oklch(0.5486 0 0);
-    --accent: oklch(0.9702 0 0);
-    --accent-foreground: oklch(0.2046 0 0);
-    --destructive: oklch(0.5830 0.2387 28.4765);
-    --destructive-foreground: oklch(0.9702 0 0);
-    --border: oklch(0.9219 0 0);
-    --input: oklch(0.9219 0 0);
-    --ring: oklch(0.7090 0 0);
-    --chart-1: oklch(0.5555 0 0);
-    --chart-2: oklch(0.5555 0 0);
-    --chart-3: oklch(0.5555 0 0);
-    --chart-4: oklch(0.5555 0 0);
-    --chart-5: oklch(0.5555 0 0);
-    --sidebar: oklch(0.9851 0 0);
-    --sidebar-foreground: oklch(0.1448 0 0);
-    --sidebar-primary: oklch(0.2046 0 0);
-    --sidebar-primary-foreground: oklch(0.9851 0 0);
-    --sidebar-accent: oklch(0.9702 0 0);
-    --sidebar-accent-foreground: oklch(0.2046 0 0);
-    --sidebar-border: oklch(0.9219 0 0);
-    --sidebar-ring: oklch(0.7090 0 0);
-    --font-sans: Geist Mono, monospace;
-    --font-serif: Geist Mono, monospace;
-    --font-mono: Geist Mono, monospace;
-    --radius: 0.5rem;
-    --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --shadow-xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --shadow-sm: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-    --shadow: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-    --shadow-md: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 2px 4px -1px hsl(0 0% 0% / 0.00);
-    --shadow-lg: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 4px 6px -1px hsl(0 0% 0% / 0.00);
-    --shadow-xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 8px 10px -1px hsl(0 0% 0% / 0.00);
-    --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --tracking-normal: 0em;
-    --spacing: 0.25rem;
-  }
-  html.dark {
-    --background: #000;
-    --foreground: #fff;
-    --card: #18181b;
-    --card-foreground: #fff;
-    --popover: #222;
-    --popover-foreground: #fff;
-    --primary: #fff;
-    --primary-foreground: #000;
-    --secondary: #222;
-    --secondary-foreground: #fff;
-    --muted: #222;
-    --muted-foreground: #fff;
-    --accent: #222;
-    --accent-foreground: #fff;
-    --destructive: #222;
-    --destructive-foreground: #fff;
-    --border: #333;
-    --input: #18181b;
-    --ring: #fff;
-    --chart-1: #fff;
-    --chart-2: #fff;
-    --chart-3: #fff;
-    --chart-4: #fff;
-    --chart-5: #fff;
-    --sidebar: #111;
-    --sidebar-foreground: #fff;
-    --sidebar-primary: #fff;
-    --sidebar-primary-foreground: #111;
-    --sidebar-accent: #222;
-    --sidebar-accent-foreground: #fff;
-    --sidebar-border: #fff;
-    --sidebar-ring: #fff;
-    --font-sans: Geist Mono, monospace;
-    --font-serif: Geist Mono, monospace;
-    --font-mono: Geist Mono, monospace;
-    --radius: 0.5rem;
-    --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --shadow-xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --shadow-sm: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-    --shadow: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-    --shadow-md: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 2px 4px -1px hsl(0 0% 0% / 0.00);
-    --shadow-lg: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 4px 6px -1px hsl(0 0% 0% / 0.00);
-    --shadow-xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 8px 10px -1px hsl(0 0% 0% / 0.00);
-    --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
+    --background: #ffffff;
+    --foreground: #1a1a1a;
+    --card: #f8f9fa;
+    --card-foreground: #1a1a1a;
+    --popover: #ffffff;
+    --popover-foreground: #1a1a1a;
+    --primary: #00a651;
+    --primary-foreground: #ffffff;
+    --secondary: #f0f2f5;
+    --secondary-foreground: #1a1a1a;
+    --muted: #e0e0e0;
+    --muted-foreground: #666666;
+    --accent: #10b981;
+    --accent-foreground: #ffffff;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #e5e7eb;
+    --input: #ffffff;
+    --ring: #00a651;
+    --chart-1: #00a651;
+    --chart-2: #10b981;
+    --chart-3: #3b82f6;
+    --chart-4: #f59e0b;
+    --chart-5: #ef4444;
+    --sidebar: #f8f9fa;
+    --sidebar-foreground: #1a1a1a;
+    --sidebar-primary: #00a651;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #f0f2f5;
+    --sidebar-accent-foreground: #1a1a1a;
+    --sidebar-border: #e5e7eb;
+    --sidebar-ring: #00a651;
+    --font-sans: 'Inter', sans-serif;
+    --font-serif: 'Inter', sans-serif;
+    --font-mono: 'Inter', sans-serif;
+    --radius: 0.75rem;
   }
 
   * {
     @apply border-border;
-    font-family: Geist Mono, monospace;
+    font-family: 'Inter', sans-serif;
   }
+
   body {
     @apply bg-background text-foreground;
-    font-family: Geist Mono, monospace;
-    background: linear-gradient(180deg, #14532d 0%, #000 60% 100%) !important;
-    color: #fff !important;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    color: #1a1a1a;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f0f2f5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #d0d0d0;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
   }
 }
 
@@ -122,12 +92,28 @@
   border: 0;
 }
 
-/* Hide number input spinners for all browsers */
+/* Hide number input spinners */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 input[type="number"] {
-  -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield;
+}
+
+/* Smooth animations */
+@layer components {
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .glass-effect {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+
+  .card-shadow {
+    @apply shadow-lg shadow-black/10;
+  }
 }
