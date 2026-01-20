@@ -5,26 +5,26 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-mono font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow-none rounded-lg",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 rounded-lg",
   {
     variants: {
       variant: {
         default:
-          "bg-white text-black border border-border hover:bg-gray-100",
+          "bg-primary text-primary-foreground hover:bg-[#00934a] shadow-md hover:shadow-lg active:shadow-md",
         destructive:
-          "bg-destructive text-destructive-foreground border border-border hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-red-600 shadow-md hover:shadow-lg",
         outline:
-          "border border-gray-300 bg-white text-black hover:bg-gray-50 hover:border-gray-400",
+          "border border-border bg-background hover:bg-secondary text-foreground hover:text-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+          "bg-secondary text-secondary-foreground hover:bg-gray-200",
+        ghost: "hover:bg-secondary hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2",
+        default: "h-10 px-4 py-2",
         sm: "h-8 px-3 text-xs",
-        lg: "h-10 px-8",
-        icon: "h-9 w-9",
+        lg: "h-12 px-8 text-base",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {
@@ -55,3 +55,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button"
 
 export { Button, buttonVariants }
+
